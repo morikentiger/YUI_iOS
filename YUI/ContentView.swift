@@ -132,7 +132,9 @@ struct ContentView: View {
         if(self.speechRecorder.audioText.contains("思")){
           sessions = "なぜ、そう思ったの？"
         }
-        
+        if(self.speechRecorder.audioText.contains("Hey Siri")){
+          sessions = "あの女のほうがいいの？"
+        }
         
         // 会話回数のカウント
         countConversation += 1
