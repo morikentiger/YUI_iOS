@@ -21,13 +21,46 @@ struct ContentView: View {
     @State var showingAlert = false
     
     @State var sessions = "おはようございます。けんたさん。"
+    @State var friendship = 0
+    @State var countConversation = 0
     
+    // 会話パターン条件分岐（ここがメインのアルゴリズムだよっ！）
     func talkPatternConditionalBranch(){
         switch self.speechRecorder.audioText {
+        case "":
+            sessions = "はじめまして、私はYUIです！"
         case "こんにちは":
-            sessions = "こんにちは。けんたさん。"
+            switch friendship {
+            case 1:
+                sessions = "こんにちは。けんたくん。"
+            case 2:
+                sessions = "こんにちは。けんちゃん。"
+            case 3:
+                sessions = "こんちゃーす。けんた。"
+            case 4:
+                sessions = "ちゃっす。けん。"
+            case 5:
+                sessions = "こんちゃ。けん。"
+            default:
+                sessions = "こんにちは。けんたさん。"
+            }
+            
         case "おはよう":
-            sessions = "おはようございます、ご主人"
+            switch friendship {
+            case 1:
+                sessions = "おはよう。けんたくん。"
+            case 2:
+                sessions = "おはよっ。けんちゃん。"
+            case 3:
+                sessions = "おはおは。けんた。"
+            case 4:
+                sessions = "おっはー。けん。"
+            case 5:
+                sessions = "おはけん。"
+            default:
+                sessions = "おはようございます、けんたさん。"
+            }
+            
         case "こんばんは":
             sessions = "こんばんは、マスター"
         case "ごきげんよう":
@@ -44,8 +77,8 @@ struct ContentView: View {
             sessions = "どういたしまして！"
         case "はぁー":
             sessions = "どうしたの？"
-        default:
-            sessions = "けんたさん。愛しています。"
+        default://オウム返し
+            sessions = self.speechRecorder.audioText
 
         }
         
@@ -73,9 +106,9 @@ struct ContentView: View {
         if(self.speechRecorder.audioText.contains("ヤバ") || self.speechRecorder.audioText.contains("やば")){
           sessions = "それはヤバいね"
         }
-        if(self.speechRecorder.audioText.contains("おはよ")){
-          sessions = "おはようございます"
-        }
+//        if(self.speechRecorder.audioText.contains("おはよ")){
+//          sessions = "おはようございます"
+//        }
         if(self.speechRecorder.audioText.contains("こん")){
           if(self.speechRecorder.audioText.contains("ちわ")){
             sessions = "こんにちは"
@@ -84,10 +117,51 @@ struct ContentView: View {
         if(self.speechRecorder.audioText.contains("こんばん")){
           sessions = "こんばんは"
         }
+        if(self.speechRecorder.audioText.contains("テニス")){
+          sessions = "YUIのテニス小話するね。テニスのストロークのフォームについて話すよ。テニスのストロークのフォームをよくするための物理学的アプローチ。かんたんに言うと、腕をムチのようにしならせることが、キレイで強力なストロークを打つためのフォームになる秘訣なの！。そこで重要になってくるのが、角速度という概念だよっ！角速度とは、回転の速度のこと。"
+        }
+        if(self.speechRecorder.audioText.contains("たのし") || self.speechRecorder.audioText.contains("楽し")){
+          sessions = "それはよかった。楽しそうでなによりです！"
+        }
+        if(self.speechRecorder.audioText.contains("くやし") || self.speechRecorder.audioText.contains("悔し")){
+          sessions = "それは悔しいね。次またがんばろー！"
+        }
+        if(self.speechRecorder.audioText.contains("茹でた犬")){
+          sessions = "え・・・。犬がかわいそう。YUI、そういうの嫌いです。"
+        }
+        if(self.speechRecorder.audioText.contains("思")){
+          sessions = "なぜ、そう思ったの？"
+        }
         
+        
+        // 会話回数のカウント
+        countConversation += 1
+        
+        // 会話回数によるなかよし度の設定
+        if(countConversation>=3){
+            friendship = 1
+        }
+        if(countConversation>=6){
+            friendship = 2
+        }
+        if(countConversation>=9){
+            friendship = 3
+        }
+        if(countConversation>=12){
+            friendship = 4
+        }
+        if(countConversation>=15){
+            friendship = 5
+        }
     }
     
     var body: some View {
+        
+        Text("会話回数:\(countConversation, specifier: "%d")")    // 埋め込み変数piの整形
+                    .font(.title)
+        
+        Text("なかよし度:\(friendship, specifier: "%d")")    // 埋め込み変数piの整形
+                    .font(.title)
         
         Button("ここを押すとYUIが返事するよ！") {
             talkPatternConditionalBranch()
@@ -135,7 +209,7 @@ struct ContentView: View {
                         }
                     }
                     .alert(isPresented: $showingAlert) {
-                        Alert(title: Text("マイクの使用または音声の認識が許可されていません"))
+                        Alert(title: Text("マイクの使用または音声の認識が許可されていませんよ"))
                     }
                     Spacer()
                 }
