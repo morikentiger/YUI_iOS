@@ -23,6 +23,7 @@ struct ContentView: View {
     @State var yuiSession = "おはようございます。けんたさん。"
     @State var yuiPostSession :[String] = []
     @State var usrSession :[String] = []
+    @State var usrName = ""
     @State var friendship = 0
     @State var countConversation = 0
     
@@ -181,7 +182,10 @@ struct ContentView: View {
 //            let utterance = AVSpeechUtterance(string: self.speechRecorder.audioText)
             utterance.voice = AVSpeechSynthesisVoice(language: "ja-JP")
             synthesizer.speak(utterance)
-        }
+        }.padding()
+            .overlay(
+                RoundedRectangle(cornerRadius: 10)
+                    .stroke(Color.blue, lineWidth: 1))
         
         ScrollView{
             VStack(alignment: .leading, spacing: 5) {
