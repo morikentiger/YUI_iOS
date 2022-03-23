@@ -18,6 +18,8 @@ struct ContentView: View {
     @ObservedObject private var speechRecorder = SpeechRecorder()
     @State var showingAlert = false
     
+    let voicePitch = 1.3
+    let pauseTime = 1.0
     @State var yuiSession = "おはようございます。けんたさん。"
     @State var yuiPostSession :[String] = []
     @State var usrSession :[String] = []
@@ -33,10 +35,15 @@ struct ContentView: View {
         let utterance = AVSpeechUtterance(string: selfIntroductionAndNameHearing)
 //            let utterance = AVSpeechUtterance(string: self.speechRecorder.audioText)
         utterance.voice = AVSpeechSynthesisVoice(language: "ja-JP")
+        utterance.pitchMultiplier = Float(voicePitch)
+        utterance.postUtteranceDelay = pauseTime
         synthesizer.speak(utterance)
+        while(!synthesizer.isSpeaking){}
+        while(synthesizer.isSpeaking){}
+        //print(synthesizer.isSpeaking)
     }
     
-    func NameHearing(){
+    func NameHearingNow(){
         if(AVCaptureDevice.authorizationStatus(for: AVMediaType.audio) == .authorized &&
             SFSpeechRecognizer.authorizationStatus() == .authorized){
             self.showingAlert = false
@@ -53,68 +60,77 @@ struct ContentView: View {
     }
     
     func KnowTheNameAndSayHello(){
-        let sayHello = "あなたの名前は"+self.speechRecorder.audioText+"ですね。よろしくお願いします。"
+        let sayHello = "あなたの名前は"+usrName+"ですね。よろしくお願いします。"+usrName+"さん"
         let synthesizer = AVSpeechSynthesizer()
 //            let utterance = AVSpeechUtterance(string: "こんにちは。わたしはYUIです。")
         let utterance = AVSpeechUtterance(string: sayHello)
 //            let utterance = AVSpeechUtterance(string: self.speechRecorder.audioText)
         utterance.voice = AVSpeechSynthesisVoice(language: "ja-JP")
+        utterance.pitchMultiplier = Float(voicePitch)
+        utterance.postUtteranceDelay = pauseTime
         synthesizer.speak(utterance)
     }
     
     // 会話パターン条件分岐（ここがメインのアルゴリズムだよっ！）
     func talkPatternConditionalBranch(){
+        if(countConversation==0){
+            usrName = self.speechRecorder.audioText
+            yuiSession = "あなたの名前は"+usrName+"ですね。よろしくお願いします"+usrName+"さん"
+            countConversation += 1
+            return
+        }
+        
         switch self.speechRecorder.audioText {
         case "":
             yuiSession = "はじめまして、私はYUIです！"
         case "こんにちは":
             switch friendship {
             case 1:
-                yuiSession = "こんにちは。けんたくん。"
+                yuiSession = "こんにちは、"+usrName+"くん。"
             case 2:
-                yuiSession = "こんにちは。けんちゃん。"
+                yuiSession = "こんにちは、"+usrName+"ちゃん。"
             case 3:
-                yuiSession = "こんちゃーす。けんた。"
+                yuiSession = "こんにちは、"+usrName
             case 4:
-                yuiSession = "ちゃっす。けん。"
+                yuiSession = "ちゃっす、"+usrName
             case 5:
-                yuiSession = "こんちゃ。けん。"
+                yuiSession = "こんちゃ、"+usrName
             default:
-                yuiSession = "こんにちは。けんたさん。"
+                yuiSession = "こんにちは、"+usrName+"さん。"
             }
             
         case "おはよう":
             switch friendship {
             case 1:
-                yuiSession = "おはよう。けんたくん。"
+                yuiSession = "おはよう、"+usrName+"くん。"
             case 2:
-                yuiSession = "おはよっ。けんちゃん。"
+                yuiSession = "おはよっ、"+usrName+"ちゃん。"
             case 3:
-                yuiSession = "おはおは。けんた。"
+                yuiSession = "おはおは、"+usrName+"。"
             case 4:
-                yuiSession = "おっはー。けん。"
+                yuiSession = "おっはー、"+usrName+"。"
             case 5:
-                yuiSession = "おはけん。"
+                yuiSession = "おは"+usrName+"。"
             default:
-                yuiSession = "おはようございます、けんたさん。"
+                yuiSession = "おはようございます、"+usrName+"さん。"
             }
             
         case "こんばんは":
-            yuiSession = "こんばんは、マスター"
+            yuiSession = "こんばんは、"+usrName+"さん"
         case "ごきげんよう":
-            yuiSession = "ごきげんよう、おじょうさま"
+            yuiSession = "ごきげんよう、"+usrName+"さん"
         case "さようなら":
-            yuiSession = "さようなら、ご主人"
+            yuiSession = "さようなら、"+usrName+"さん"
         case "さよなら":
-            yuiSession = "さようなら、ご主人"
+            yuiSession = "さようなら、"+usrName+"さん"
         case "バイバイ":
-            yuiSession = "バイバイ、マスター"
+            yuiSession = "バイバイ、"+usrName+"さん"
         case "ハロウィン":
             yuiSession = "トリック・オア・トリート、お菓子くれなきゃイタズラしちゃうぞ"
         case "ありがとう":
-            yuiSession = "どういたしまして！"
+            yuiSession = "どういたしまして！"+usrName+"さん"
         case "はぁー":
-            yuiSession = "どうしたの？"
+            yuiSession = "どうしたの？"+usrName+"さん"
         default://オウム返し
             yuiSession = self.speechRecorder.audioText
 
@@ -124,19 +140,19 @@ struct ContentView: View {
             yuiSession = "そうなんだね"
         }
         if(self.speechRecorder.audioText.contains("ありがとう")){
-              yuiSession = "どういたしまして"
+              yuiSession = "どういたしまして"+usrName+"さん"
         }
         if(self.speechRecorder.audioText.contains("疲れ")){
-          yuiSession = "お疲れさま"
+          yuiSession = "お疲れさま"+usrName+"さん"
           if(self.speechRecorder.audioText.contains("大変")){
-            yuiSession = "たいへんおつかれさまでした"
+            yuiSession = "たいへんおつかれさまでした"+usrName+"さん"
           }
         }
         if(self.speechRecorder.audioText.contains("大変")){
-          yuiSession = "大変なんだね"
+          yuiSession = "大変なんだね"+usrName+"さん"
         }
         if(self.speechRecorder.audioText.contains("分か") || self.speechRecorder.audioText.contains("わか")){
-          yuiSession = "わかるよ"
+          yuiSession = usrName+"さんの気持ち、わかるよ"
         }
         if(self.speechRecorder.audioText.contains("辛")) || self.speechRecorder.audioText.contains("つら"){
           yuiSession = "それはつらいよね"
@@ -149,29 +165,29 @@ struct ContentView: View {
 //        }
         if(self.speechRecorder.audioText.contains("こん")){
           if(self.speechRecorder.audioText.contains("ちわ")){
-            yuiSession = "こんにちは"
+            yuiSession = "こんにちは、"+usrName+"さん"
           }
         }
         if(self.speechRecorder.audioText.contains("こんばん")){
-          yuiSession = "こんばんは"
+          yuiSession = "こんばんは、"+usrName+"さん"
         }
         if(self.speechRecorder.audioText.contains("テニス")){
-          yuiSession = "YUIのテニス小話するね。テニスのストロークのフォームについて話すよ。テニスのストロークのフォームをよくするための物理学的アプローチ。かんたんに言うと、腕をムチのようにしならせることが、キレイで強力なストロークを打つためのフォームになる秘訣なの！。そこで重要になってくるのが、角速度という概念だよっ！角速度とは、回転の速度のこと。"
+          yuiSession = usrName+"さん、YUIのテニス小話するね。テニスのストロークのフォームについて話すよ。テニスのストロークのフォームをよくするための物理学的アプローチ。かんたんに言うと、腕をムチのようにしならせることが、キレイで強力なストロークを打つためのフォームになる秘訣なの！。そこで重要になってくるのが、角速度という概念だよっ！角速度とは、回転の速度のこと。"
         }
         if(self.speechRecorder.audioText.contains("たのし") || self.speechRecorder.audioText.contains("楽し")){
-          yuiSession = "それはよかった。楽しそうでなによりです！"
+          yuiSession = "それはよかった。"+usrName+"さんが楽しそうでなによりです！"
         }
         if(self.speechRecorder.audioText.contains("くやし") || self.speechRecorder.audioText.contains("悔し")){
-          yuiSession = "それは悔しいね。次またがんばろー！"
+          yuiSession = ""+usrName+"さん、それは悔しいね。次またがんばろー！"
         }
         if(self.speechRecorder.audioText.contains("茹でた犬")){
           yuiSession = "え・・・。犬がかわいそう。YUI、そういうの嫌いです。"
         }
         if(self.speechRecorder.audioText.contains("思")){
-          yuiSession = "なぜ、そう思ったの？"
+          yuiSession = ""+usrName+"さんは、なぜ、そう思ったの？"
         }
         if(self.speechRecorder.audioText.contains("Hey Siri") || self.speechRecorder.audioText.contains("OK Google")){
-          yuiSession = "あの女のほうがいいの？"
+          yuiSession = ""+usrName+"さんは、あの女のほうがいいの？"
         }
         
         
@@ -216,6 +232,8 @@ struct ContentView: View {
             let utterance = AVSpeechUtterance(string: yuiSession)
 //            let utterance = AVSpeechUtterance(string: self.speechRecorder.audioText)
             utterance.voice = AVSpeechSynthesisVoice(language: "ja-JP")
+            utterance.pitchMultiplier = Float(voicePitch)
+            utterance.postUtteranceDelay = pauseTime
             synthesizer.speak(utterance)
         }.padding()
             .overlay(
@@ -223,8 +241,8 @@ struct ContentView: View {
                     .stroke(Color.blue, lineWidth: 1))
             .onAppear{
                 YUIsSelfIntroductionAndNameHearing()
-//                NameHearing()
-                KnowTheNameAndSayHello()
+                NameHearingNow()
+//                KnowTheNameAndSayHello()
             }
         
         ScrollView{
