@@ -14,8 +14,6 @@ import SwiftUI
 import Speech
 import AVFoundation
 
-
- 
 struct ContentView: View {
     @ObservedObject private var speechRecorder = SpeechRecorder()
     @State var showingAlert = false
@@ -26,6 +24,43 @@ struct ContentView: View {
     @State var usrName = ""
     @State var friendship = 0
     @State var countConversation = 0
+    
+    // 起動直後のYUIの自己紹介とユーザーへ名前を訪ねて音声入力する関数
+    func YUIsSelfIntroductionAndNameHearing(){
+        let selfIntroductionAndNameHearing = "はじめまして、わたしの名前はYUIです。もしよかったら、あなたの名前を教えてください"
+        let synthesizer = AVSpeechSynthesizer()
+//            let utterance = AVSpeechUtterance(string: "こんにちは。わたしはYUIです。")
+        let utterance = AVSpeechUtterance(string: selfIntroductionAndNameHearing)
+//            let utterance = AVSpeechUtterance(string: self.speechRecorder.audioText)
+        utterance.voice = AVSpeechSynthesisVoice(language: "ja-JP")
+        synthesizer.speak(utterance)
+    }
+    
+    func NameHearing(){
+        if(AVCaptureDevice.authorizationStatus(for: AVMediaType.audio) == .authorized &&
+            SFSpeechRecognizer.authorizationStatus() == .authorized){
+            self.showingAlert = false
+            self.speechRecorder.toggleRecording()
+            if !self.speechRecorder.audioRunning {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
+                    
+                }
+            }
+        }
+        else{
+            self.showingAlert = true
+        }
+    }
+    
+    func KnowTheNameAndSayHello(){
+        let sayHello = "あなたの名前は"+self.speechRecorder.audioText+"ですね。よろしくお願いします。"
+        let synthesizer = AVSpeechSynthesizer()
+//            let utterance = AVSpeechUtterance(string: "こんにちは。わたしはYUIです。")
+        let utterance = AVSpeechUtterance(string: sayHello)
+//            let utterance = AVSpeechUtterance(string: self.speechRecorder.audioText)
+        utterance.voice = AVSpeechSynthesisVoice(language: "ja-JP")
+        synthesizer.speak(utterance)
+    }
     
     // 会話パターン条件分岐（ここがメインのアルゴリズムだよっ！）
     func talkPatternConditionalBranch(){
@@ -186,6 +221,11 @@ struct ContentView: View {
             .overlay(
                 RoundedRectangle(cornerRadius: 10)
                     .stroke(Color.blue, lineWidth: 1))
+            .onAppear{
+                YUIsSelfIntroductionAndNameHearing()
+//                NameHearing()
+                KnowTheNameAndSayHello()
+            }
         
         ScrollView{
             VStack(alignment: .leading, spacing: 5) {
@@ -222,7 +262,7 @@ struct ContentView: View {
                         }
                     }
                     .alert(isPresented: $showingAlert) {
-                        Alert(title: Text("マイクの使用または音声の認識が許可されていませんよ"))
+                        Alert(title: Text("マイクの使用または音声の認識が許可されていないよ"))
                     }
                     Spacer()
                 }
