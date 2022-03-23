@@ -20,7 +20,9 @@ struct ContentView: View {
     @ObservedObject private var speechRecorder = SpeechRecorder()
     @State var showingAlert = false
     
-    @State var sessions = "おはようございます。けんたさん。"
+    @State var yuiSession = "おはようございます。けんたさん。"
+    @State var yuiPostSession :[String] = []
+    @State var usrSession :[String] = []
     @State var friendship = 0
     @State var countConversation = 0
     
@@ -28,113 +30,118 @@ struct ContentView: View {
     func talkPatternConditionalBranch(){
         switch self.speechRecorder.audioText {
         case "":
-            sessions = "はじめまして、私はYUIです！"
+            yuiSession = "はじめまして、私はYUIです！"
         case "こんにちは":
             switch friendship {
             case 1:
-                sessions = "こんにちは。けんたくん。"
+                yuiSession = "こんにちは。けんたくん。"
             case 2:
-                sessions = "こんにちは。けんちゃん。"
+                yuiSession = "こんにちは。けんちゃん。"
             case 3:
-                sessions = "こんちゃーす。けんた。"
+                yuiSession = "こんちゃーす。けんた。"
             case 4:
-                sessions = "ちゃっす。けん。"
+                yuiSession = "ちゃっす。けん。"
             case 5:
-                sessions = "こんちゃ。けん。"
+                yuiSession = "こんちゃ。けん。"
             default:
-                sessions = "こんにちは。けんたさん。"
+                yuiSession = "こんにちは。けんたさん。"
             }
             
         case "おはよう":
             switch friendship {
             case 1:
-                sessions = "おはよう。けんたくん。"
+                yuiSession = "おはよう。けんたくん。"
             case 2:
-                sessions = "おはよっ。けんちゃん。"
+                yuiSession = "おはよっ。けんちゃん。"
             case 3:
-                sessions = "おはおは。けんた。"
+                yuiSession = "おはおは。けんた。"
             case 4:
-                sessions = "おっはー。けん。"
+                yuiSession = "おっはー。けん。"
             case 5:
-                sessions = "おはけん。"
+                yuiSession = "おはけん。"
             default:
-                sessions = "おはようございます、けんたさん。"
+                yuiSession = "おはようございます、けんたさん。"
             }
             
         case "こんばんは":
-            sessions = "こんばんは、マスター"
+            yuiSession = "こんばんは、マスター"
         case "ごきげんよう":
-            sessions = "ごきげんよう、おじょうさま"
+            yuiSession = "ごきげんよう、おじょうさま"
         case "さようなら":
-            sessions = "さようなら、ご主人"
+            yuiSession = "さようなら、ご主人"
         case "さよなら":
-            sessions = "さようなら、ご主人"
+            yuiSession = "さようなら、ご主人"
         case "バイバイ":
-            sessions = "バイバイ、マスター"
+            yuiSession = "バイバイ、マスター"
         case "ハロウィン":
-            sessions = "トリック・オア・トリート、お菓子くれなきゃイタズラしちゃうぞ"
+            yuiSession = "トリック・オア・トリート、お菓子くれなきゃイタズラしちゃうぞ"
         case "ありがとう":
-            sessions = "どういたしまして！"
+            yuiSession = "どういたしまして！"
         case "はぁー":
-            sessions = "どうしたの？"
+            yuiSession = "どうしたの？"
         default://オウム返し
-            sessions = self.speechRecorder.audioText
+            yuiSession = self.speechRecorder.audioText
 
         }
         
         if(self.speechRecorder.audioText.contains("なんだよ")){
-            sessions = "そうなんだね"
+            yuiSession = "そうなんだね"
         }
         if(self.speechRecorder.audioText.contains("ありがとう")){
-              sessions = "どういたしまして"
+              yuiSession = "どういたしまして"
         }
         if(self.speechRecorder.audioText.contains("疲れ")){
-          sessions = "お疲れさま"
+          yuiSession = "お疲れさま"
           if(self.speechRecorder.audioText.contains("大変")){
-            sessions = "たいへんおつかれさまでした"
+            yuiSession = "たいへんおつかれさまでした"
           }
         }
         if(self.speechRecorder.audioText.contains("大変")){
-          sessions = "大変なんだね"
+          yuiSession = "大変なんだね"
         }
         if(self.speechRecorder.audioText.contains("分か") || self.speechRecorder.audioText.contains("わか")){
-          sessions = "わかるよ"
+          yuiSession = "わかるよ"
         }
         if(self.speechRecorder.audioText.contains("辛")) || self.speechRecorder.audioText.contains("つら"){
-          sessions = "それはつらいよね"
+          yuiSession = "それはつらいよね"
         }
         if(self.speechRecorder.audioText.contains("ヤバ") || self.speechRecorder.audioText.contains("やば")){
-          sessions = "それはヤバいね"
+          yuiSession = "それはヤバいね"
         }
 //        if(self.speechRecorder.audioText.contains("おはよ")){
 //          sessions = "おはようございます"
 //        }
         if(self.speechRecorder.audioText.contains("こん")){
           if(self.speechRecorder.audioText.contains("ちわ")){
-            sessions = "こんにちは"
+            yuiSession = "こんにちは"
           }
         }
         if(self.speechRecorder.audioText.contains("こんばん")){
-          sessions = "こんばんは"
+          yuiSession = "こんばんは"
         }
         if(self.speechRecorder.audioText.contains("テニス")){
-          sessions = "YUIのテニス小話するね。テニスのストロークのフォームについて話すよ。テニスのストロークのフォームをよくするための物理学的アプローチ。かんたんに言うと、腕をムチのようにしならせることが、キレイで強力なストロークを打つためのフォームになる秘訣なの！。そこで重要になってくるのが、角速度という概念だよっ！角速度とは、回転の速度のこと。"
+          yuiSession = "YUIのテニス小話するね。テニスのストロークのフォームについて話すよ。テニスのストロークのフォームをよくするための物理学的アプローチ。かんたんに言うと、腕をムチのようにしならせることが、キレイで強力なストロークを打つためのフォームになる秘訣なの！。そこで重要になってくるのが、角速度という概念だよっ！角速度とは、回転の速度のこと。"
         }
         if(self.speechRecorder.audioText.contains("たのし") || self.speechRecorder.audioText.contains("楽し")){
-          sessions = "それはよかった。楽しそうでなによりです！"
+          yuiSession = "それはよかった。楽しそうでなによりです！"
         }
         if(self.speechRecorder.audioText.contains("くやし") || self.speechRecorder.audioText.contains("悔し")){
-          sessions = "それは悔しいね。次またがんばろー！"
+          yuiSession = "それは悔しいね。次またがんばろー！"
         }
         if(self.speechRecorder.audioText.contains("茹でた犬")){
-          sessions = "え・・・。犬がかわいそう。YUI、そういうの嫌いです。"
+          yuiSession = "え・・・。犬がかわいそう。YUI、そういうの嫌いです。"
         }
         if(self.speechRecorder.audioText.contains("思")){
-          sessions = "なぜ、そう思ったの？"
+          yuiSession = "なぜ、そう思ったの？"
         }
-        if(self.speechRecorder.audioText.contains("Hey Siri")){
-          sessions = "あの女のほうがいいの？"
+        if(self.speechRecorder.audioText.contains("Hey Siri") || self.speechRecorder.audioText.contains("OK Google")){
+          yuiSession = "あの女のほうがいいの？"
         }
+        
+        
+        // 発言を記録
+        usrSession.append(self.speechRecorder.audioText)
+        yuiPostSession.append(yuiSession)
         
         // 会話回数のカウント
         countConversation += 1
@@ -170,7 +177,7 @@ struct ContentView: View {
             
             let synthesizer = AVSpeechSynthesizer()
 //            let utterance = AVSpeechUtterance(string: "こんにちは。わたしはYUIです。")
-            let utterance = AVSpeechUtterance(string: sessions)
+            let utterance = AVSpeechUtterance(string: yuiSession)
 //            let utterance = AVSpeechUtterance(string: self.speechRecorder.audioText)
             utterance.voice = AVSpeechSynthesisVoice(language: "ja-JP")
             synthesizer.speak(utterance)
@@ -235,6 +242,10 @@ struct ContentView: View {
                 }
             }
         }.padding(.vertical)
+        
+        List(usrSession, id: \.self) { usrSession in
+            Text(usrSession)
+        }
     }
 }
  
