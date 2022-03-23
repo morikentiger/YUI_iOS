@@ -29,7 +29,7 @@ struct ContentView: View {
     
     // 起動直後のYUIの自己紹介とユーザーへ名前を訪ねて音声入力する関数
     func YUIsSelfIntroductionAndNameHearing(){
-        let selfIntroductionAndNameHearing = "はじめまして、わたしの名前はYUIです。もしよかったら、あなたの名前を教えてください"
+        let selfIntroductionAndNameHearing = "はじめまして、わたしの名前はYUIです。もしよかったら、あなたの名前を声で教えてください"
         let synthesizer = AVSpeechSynthesizer()
 //            let utterance = AVSpeechUtterance(string: "こんにちは。わたしはYUIです。")
         let utterance = AVSpeechUtterance(string: selfIntroductionAndNameHearing)
@@ -59,26 +59,25 @@ struct ContentView: View {
         }
     }
     
-    func KnowTheNameAndSayHello(){
-        let sayHello = "あなたの名前は"+usrName+"ですね。よろしくお願いします。"+usrName+"さん"
-        let synthesizer = AVSpeechSynthesizer()
-//            let utterance = AVSpeechUtterance(string: "こんにちは。わたしはYUIです。")
-        let utterance = AVSpeechUtterance(string: sayHello)
-//            let utterance = AVSpeechUtterance(string: self.speechRecorder.audioText)
-        utterance.voice = AVSpeechSynthesisVoice(language: "ja-JP")
-        utterance.pitchMultiplier = Float(voicePitch)
-        utterance.postUtteranceDelay = pauseTime
-        synthesizer.speak(utterance)
-    }
+
     
     // 会話パターン条件分岐（ここがメインのアルゴリズムだよっ！）
     func talkPatternConditionalBranch(){
         if(countConversation==0){
             usrName = self.speechRecorder.audioText
             yuiSession = "あなたの名前は"+usrName+"ですね。よろしくお願いします"+usrName+"さん"
+            // 発言を記録
+            usrSession.append(self.speechRecorder.audioText)
+            yuiPostSession.append(yuiSession)
+            
+            // 会話回数のカウント
             countConversation += 1
+            
             return
         }
+        
+        
+        
         
         switch self.speechRecorder.audioText {
         case "":
@@ -134,6 +133,14 @@ struct ContentView: View {
         default://オウム返し
             yuiSession = self.speechRecorder.audioText
 
+        }
+        
+        if(self.speechRecorder.audioText.contains("名前変更")){
+            yuiSession = "名前を変更するんですね！わかりました。もういちど名前を教えてください"
+        }
+        if(usrSession[countConversation-1].contains("名前変更")){
+            usrName = self.speechRecorder.audioText
+            yuiSession = "あなたの名前は"+usrName+"ですね。よろしくお願いします"+usrName+"さん"
         }
         
         if(self.speechRecorder.audioText.contains("なんだよ")){
@@ -242,7 +249,7 @@ struct ContentView: View {
             .onAppear{
                 YUIsSelfIntroductionAndNameHearing()
                 NameHearingNow()
-//                KnowTheNameAndSayHello()
+
             }
         
         ScrollView{
