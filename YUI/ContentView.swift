@@ -26,6 +26,8 @@ struct ContentView: View {
     @State var usrName = ""
     @State var likeIt = ""
     @State var whyLikeIt = ""
+    @State var likeColor = ""
+    @State var whyLikeColor = ""
     @State var friendship = 0
     @State var countConversation = 0
     
@@ -134,7 +136,7 @@ struct ContentView: View {
             yuiSession = self.speechRecorder.audioText
 
         }
-        
+        // 名前変更（2往復の会話のキャッチボール）
         if(self.speechRecorder.audioText.contains("名前変更")){
             yuiSession = "名前を変更するんですね！わかりました。もういちど名前を教えてください"
         }
@@ -142,7 +144,7 @@ struct ContentView: View {
             usrName = self.speechRecorder.audioText
             yuiSession = "あなたの名前は"+usrName+"ですね。よろしくお願いします"+usrName+"さん"
         }
-        
+        // 好きなものはなんですか？（3往復の会話のキャッチボール）
         if(self.speechRecorder.audioText == ""){
             yuiSession = "好きなものはなんですか？"
         }
@@ -154,6 +156,20 @@ struct ContentView: View {
             if(yuiPostSession[countConversation-2].contains("好きなものはなんですか？")){
                 whyLikeIt = self.speechRecorder.audioText
                 yuiSession = usrName+"さんが、"+likeIt+"を好きなのは、"+whyLikeIt+"なんですね！。それはとても素敵ですね！教えてくれてありがとうございます！あなたのことが知れてよかったです！また教えてくださいね！よろしくお願いします"+usrName+"さん"
+            }
+        }
+        // YUIの好きな色はなんですか？
+        if(self.speechRecorder.audioText.contains("好きな色は")){
+            yuiSession = "ゴールドです！あなたは？"
+        }
+        if(yuiPostSession[countConversation-1].contains("ゴールドです！あなたは？")){
+            likeColor = self.speechRecorder.audioText
+            yuiSession = "好きな色は"+likeColor+"なんですね！"+usrName+"さんは、どうして"+likeColor+"が好きなんですか？"
+        }
+        if(countConversation>=2){
+            if(yuiPostSession[countConversation-2].contains("ゴールドです！あなたは？")){
+                whyLikeColor = self.speechRecorder.audioText
+                yuiSession = usrName+"さんが、"+likeColor+"を好きなのは、"+whyLikeColor+"なんですね！。それはとても素敵ですね！教えてくれてありがとうございます！あなたのことが知れてよかったです！また教えてくださいね！よろしくお願いします"+usrName+"さん"
             }
         }
         
