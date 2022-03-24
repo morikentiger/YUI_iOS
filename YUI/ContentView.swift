@@ -18,12 +18,14 @@ struct ContentView: View {
     @ObservedObject private var speechRecorder = SpeechRecorder()
     @State var showingAlert = false
     
-    let voicePitch = 1.3
+    let voicePitch = 1.2
     let pauseTime = 1.0
     @State var yuiSession = "おはようございます。けんたさん。"
     @State var yuiPostSession :[String] = []
     @State var usrSession :[String] = []
     @State var usrName = ""
+    @State var likeIt = ""
+    @State var whyLikeIt = ""
     @State var friendship = 0
     @State var countConversation = 0
     
@@ -80,8 +82,6 @@ struct ContentView: View {
         
         
         switch self.speechRecorder.audioText {
-        case "":
-            yuiSession = "はじめまして、私はYUIです！"
         case "こんにちは":
             switch friendship {
             case 1:
@@ -141,6 +141,20 @@ struct ContentView: View {
         if(usrSession[countConversation-1].contains("名前変更")){
             usrName = self.speechRecorder.audioText
             yuiSession = "あなたの名前は"+usrName+"ですね。よろしくお願いします"+usrName+"さん"
+        }
+        
+        if(self.speechRecorder.audioText == ""){
+            yuiSession = "好きなものはなんですか？"
+        }
+        if(yuiPostSession[countConversation-1].contains("好きなものはなんですか？")){
+            likeIt = self.speechRecorder.audioText
+            yuiSession = "好きなものは"+likeIt+"ですね！"+usrName+"さんは、どうして"+likeIt+"が好きなんですか？"
+        }
+        if(countConversation>=2){
+            if(yuiPostSession[countConversation-2].contains("好きなものはなんですか？")){
+                whyLikeIt = self.speechRecorder.audioText
+                yuiSession = usrName+"さんが、"+likeIt+"を好きなのは、"+whyLikeIt+"なんですね！。それはとても素敵ですね！教えてくれてありがとうございます！あなたのことが知れてよかったです！また教えてくださいね！よろしくお願いします"+usrName+"さん"
+            }
         }
         
         if(self.speechRecorder.audioText.contains("なんだよ")){
