@@ -39,11 +39,15 @@ struct ContentView: View {
     }
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 5) {
-            Text(self.speechRecorder.audioText)
-                .frame(maxWidth: .infinity, maxHeight: 400)
-            HStack() {
-                Spacer()
+        VStack(alignment: .center) {
+            HStack(alignment: .top) {
+                Text(self.speechRecorder.audioText)
+                    .frame(maxWidth: .infinity, maxHeight: 400)
+            }
+            
+            Spacer().frame(width: 100, height: 200)
+            
+            HStack(alignment: .center){
                 Button(action: {
                     if(AVCaptureDevice.authorizationStatus(for: AVMediaType.audio) == .authorized &&
                         SFSpeechRecognizer.authorizationStatus() == .authorized){
@@ -71,9 +75,27 @@ struct ContentView: View {
                 .alert(isPresented: $showingAlert) {
                     Alert(title: Text("マイクの使用または音声の認識が許可されていません"))
                 }
-                Spacer()
+                .frame(width: 100, height: 100, alignment: .center)
             }
             
+            Spacer()
+            
+            HStack(alignment: .center){
+                Button {
+                    talkPatternConditionalBranch()
+                    
+                    let synthesizer = AVSpeechSynthesizer()
+                    let utterance = AVSpeechUtterance(string: yuiSession)
+                    utterance.voice = AVSpeechSynthesisVoice(language: "ja-JP")
+                    utterance.pitchMultiplier = Float(voicePitch)
+                    utterance.postUtteranceDelay = pauseTime
+                    synthesizer.speak(utterance)
+                } label: {
+                    Image(systemName: "mouth")
+                        .font(.system(size: 60))
+                }
+                .frame(width: 100, height: 100, alignment: .center)
+            }
         }
         .onAppear{
             AVCaptureDevice.requestAccess(for: AVMediaType.audio) { granted in
@@ -92,20 +114,8 @@ struct ContentView: View {
                 }
             }
         }
-        
-        
-        Button {
-            talkPatternConditionalBranch()
-            
-            let synthesizer = AVSpeechSynthesizer()
-            let utterance = AVSpeechUtterance(string: yuiSession)
-            utterance.voice = AVSpeechSynthesisVoice(language: "ja-JP")
-            utterance.pitchMultiplier = Float(voicePitch)
-            utterance.postUtteranceDelay = pauseTime
-            synthesizer.speak(utterance)
-        } label: {
-            Image(systemName: "mouth")
-                .font(.system(size: 60))
+        .background{
+            Image("YUI02")
         }
     }
 }
