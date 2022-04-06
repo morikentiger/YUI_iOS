@@ -15,6 +15,7 @@ import Speech
 import AVFoundation
 
 struct ContentView: View {
+    @State private var flagMikeButton = true
     @ObservedObject private var speechRecorder = SpeechRecorder()
     @State var showingAlert = false
     
@@ -26,7 +27,7 @@ struct ContentView: View {
     
     // 会話パターン条件分岐（ここがメインのアルゴリズムだよっ！）
     func talkPatternConditionalBranch(){
-        yuiSession = "あなたのお話、聞かせてください。"
+        yuiSession = "マイクボタンを長押ししている間に、あなたのお話聞かせてね。"
         
         // ランダムであいづちを打つ
         if(self.speechRecorder.audioText.utf8.count > 1){
@@ -49,39 +50,6 @@ struct ContentView: View {
             
             HStack(alignment: .center){
                 Button(action: {
-                    if(AVCaptureDevice.authorizationStatus(for: AVMediaType.audio) == .authorized &&
-                        SFSpeechRecognizer.authorizationStatus() == .authorized){
-                        self.showingAlert = false
-                        self.speechRecorder.toggleRecording()
-                        if !self.speechRecorder.audioRunning {
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
-                                
-                            }
-                        }
-                    }
-                    else{
-                        self.showingAlert = true
-                    }
-                })
-                {
-                    if !self.speechRecorder.audioRunning {
-                        Image(systemName: "mic")
-                            .font(.system(size: 60))
-                    } else {
-                        Image(systemName: "mic.fill")
-                            .font(.system(size: 60))
-                    }
-                }
-                .alert(isPresented: $showingAlert) {
-                    Alert(title: Text("マイクの使用または音声の認識が許可されていません"))
-                }
-                .frame(width: 100, height: 100, alignment: .center)
-            }
-            
-            Spacer()
-            
-            HStack(alignment: .center){
-                Button {
                     talkPatternConditionalBranch()
                     
                     let synthesizer = AVSpeechSynthesizer()
@@ -90,12 +58,48 @@ struct ContentView: View {
                     utterance.pitchMultiplier = Float(voicePitch)
                     utterance.postUtteranceDelay = pauseTime
                     synthesizer.speak(utterance)
-                } label: {
-                    Image(systemName: "mouth")
-                        .font(.system(size: 60))
-                }
-                .frame(width: 100, height: 100, alignment: .center)
+                }, label: {
+                    if !self.speechRecorder.audioRunning {
+                        Image(systemName: "mic")
+                            .font(.system(size: 60))
+//                            .imageScale(.large)
+//                            .background(Color.green)
+//                            .foregroundColor(.white)
+//                            .clipShape(Circle())
+                    } else {
+                        Image(systemName: "mic.fill")
+                            .font(.system(size: 120))
+                    }
+                })
+                    .alert(isPresented: $showingAlert) {
+                        Alert(title: Text("マイクの使用または音声の認識が許可されていません"))
+                    }
+                    .frame(width: 100, height: 100, alignment: .center)
+                    .simultaneousGesture(
+                        LongPressGesture().onEnded{ _ in
+                            if(AVCaptureDevice.authorizationStatus(for: AVMediaType.audio) == .authorized &&
+                                SFSpeechRecognizer.authorizationStatus() == .authorized){
+                                self.showingAlert = false
+                                self.speechRecorder.toggleRecording()
+//                                if !self.speechRecorder.audioRunning {
+//                                    DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
+//                                    }
+//                                }
+                            }
+                            else{
+                                self.showingAlert = true
+                            }
+                            
+                        }
+                        
+                    )
+                    
+                
             }
+            Spacer().frame(width: 100, height: 60)
+        }
+        .background{
+            Image("YUI08")
         }
         .onAppear{
             AVCaptureDevice.requestAccess(for: AVMediaType.audio) { granted in
@@ -113,9 +117,6 @@ struct ContentView: View {
                     //}
                 }
             }
-        }
-        .background{
-            Image("YUI02")
         }
     }
 }
