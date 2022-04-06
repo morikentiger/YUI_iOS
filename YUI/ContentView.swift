@@ -50,6 +50,8 @@ struct ContentView: View {
             
             HStack(alignment: .center){
                 Button(action: {
+                    self.speechRecorder.stopRecording()
+                    
                     talkPatternConditionalBranch()
                     
                     let synthesizer = AVSpeechSynthesizer()
@@ -80,11 +82,18 @@ struct ContentView: View {
                             if(AVCaptureDevice.authorizationStatus(for: AVMediaType.audio) == .authorized &&
                                 SFSpeechRecognizer.authorizationStatus() == .authorized){
                                 self.showingAlert = false
-                                self.speechRecorder.toggleRecording()
-//                                if !self.speechRecorder.audioRunning {
-//                                    DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
-//                                    }
-//                                }
+                                do {
+                                    try self.speechRecorder.startRecording()
+                                    
+    //                                self.speechRecorder.toggleRecording()
+    //                                if !self.speechRecorder.audioRunning {
+    //                                    DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
+    //                                    }
+    //                                }
+                                } catch {
+                                    
+                                }
+                                
                             }
                             else{
                                 self.showingAlert = true
