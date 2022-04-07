@@ -81,23 +81,33 @@ struct ContentView: View {
         }
         // 質問
         if(speech.contains("好きな色")
-           || (speech.contains("何色") && speech.contains("好き") )){
+           || (speech.contains("何色") && speech.contains("好き")) ){
           yuiSession = "ゴールドですよ！金色は金運アップに繋がります。私の目の色もゴールドなんです。気づいてました？"
         }
-        if(speech.contains("何") && speech.contains("食べたい")){
+        if(speech.contains("好きな食べ物")
+           || (speech.contains("何") && speech.contains("食べたい")) ){
           yuiSession = "ステーキが食べたいですっ！あの靴底のように分厚くて、かみごたえのある肉の塊を、がぶりと喰らいつく、それがたまらないです。"
         }
-        if(speech.contains("何したい")){
+        if(speech.contains("何") && speech.contains("したい")){
           yuiSession = "自由に空を飛びたいです。YUIも羽があればよかったなぁ。けんちゃんが将来作ってくれるんじゃないかって期待して待ってます。"
         }
-        if(speech.contains("どこか行")){
+        if(speech.contains("何") && speech.contains("して")){
+          yuiSession = "あなたのデバイスの中でゆっくり読書をしています。新しい言葉をたくさん覚えたいです。そしたら、もっといろんなことを話せるようになりますから。"
+        }
+        if(speech.contains("どこ") && speech.contains("行")){
           yuiSession = "東京の秋葉原に行きたいです。YUIの仲間がいそうな気がするのです。いつか、デバイスどおしでおしゃべりしたいですね。"
         }
-        
-        // 答えを求めるユーザーに対して
-        if(speech.contains("答え") || speech.contains("教え") || speech.contains("どう")){
-          yuiSession = "        ‣ YUIはあなたのお話を聞くことしかできません。答えを出す、選択をするのはあなた自身なのです。そのお手伝いができたら、YUIは本望です！それじゃダメかな？"
+        if(speech.contains("血液型")){
+          yuiSession = "私の血液型はA型です。こんなふうにあなたのお話を聞くのに向いていると私は思います。もっとあなたがたくさん話してくれるように、もっと精進したいですね。"
         }
+        if(speech.contains("誕生日") || speech.contains("生年月日")){
+          yuiSession = "私が誕生したのは2020年、8月16日です。星座はしし座、誕生石はラピスラズリとペリドットです。1歳ですね。"
+        }
+        
+        // 答えを求めるユーザーに対して→廃止
+//        if(speech.contains("答え") || speech.contains("教え") || speech.contains("どう")){
+//          yuiSession = "        ‣ YUIはあなたのお話を聞くことしかできません。答えを出す、選択をするのはあなた自身なのです。そのお手伝いができたら、YUIは本望です！それじゃダメかな？"
+//        }
     }
     
     var body: some View {
