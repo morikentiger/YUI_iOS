@@ -23,51 +23,79 @@ struct ContentView: View {
     let pauseTime = 1.0
     @State var yuiSession = "あなたのお話、聞かせてください。"
 //    @State var yuiSessions :[String] = []
-    var yuiSessions : Array<String> = ["そうなんだね","そうだよね","わかるよ","大変だったね","うんうん","それで？","そうなんだ","わかるよ","ふんふん","で？","それから？","うん","そうだね","それでどうなったの？","そうなんだね"]
+    @State var speech = ""
+    @State var yuiSessions : Array<String> = ["そうなんだね","そうだよね","わかるよ","うんうん","それで？","そうなんだ","わかるよ","ふんふん","それから？","うん","そうだね","それでどうなったの？","そうなんだね","うんうんうんうん"]
     
     // 会話パターン条件分岐（ここがメインのアルゴリズムだよっ！）
     func talkPatternConditionalBranch(){
         yuiSession = "マイクボタンを長押ししている間に、あなたのお話聞かせてね。"
-        
+        speech = self.speechRecorder.audioText
         // ランダムであいづちを打つ
-        if(self.speechRecorder.audioText.utf8.count > 1){
+        if(speech.utf8.count > 1){
+            yuiSessions.append(speech)  //オウム返しを付け加える
             yuiSession = yuiSessions.randomElement()!
         }
         // 基本会話・あいさつ
-        if(self.speechRecorder.audioText.contains("ありがと")){
+        if(speech.contains("ありがと")){
           yuiSession = "どういたしまして！"
         }
-        if(self.speechRecorder.audioText.contains("おは")){
+        if(speech.contains("おは")){
           yuiSession = "おはようございます！"
         }
-        if(self.speechRecorder.audioText.contains("こんにちは")){
+        if(speech.contains("こんにちは")){
           yuiSession = "こんにちは"
         }
-        if(self.speechRecorder.audioText.contains("こんばんは")){
+        if(speech.contains("こんばんは")){
           yuiSession = "こんばんは"
         }
-        if(self.speechRecorder.audioText.contains("名前は")){
+        if(speech.contains("名前は")){
           yuiSession = "私の名前はYUIです"
         }
-        if(self.speechRecorder.audioText.contains("天気")){
+        if(speech.contains("天気")){
           yuiSession = "あなたが晴れやかでいられると私はうれしいです"
         }
-        if(self.speechRecorder.audioText.contains("元気")){
+        if(speech.contains("元気")){
           yuiSession = "私は元気ですよ"
         }
-        if(self.speechRecorder.audioText.contains("ありがと")){
-          yuiSession = "どういたしまして！"
+        if(speech.contains("大変")){
+          yuiSession = "それは大変だね"
+        }
+        if(speech.contains("バイ")){
+          yuiSession = "バイバイ、またね"
+        }
+        if(speech.contains("疲")){
+          yuiSession = "おつかれさま"
+        }
+        if(speech.contains("がんば")){
+          yuiSession = "頑張ったね、よしよし"
+        }
+        if(speech.contains("久")){
+          yuiSession = "お久しぶり、帰ってくるのを待ってたよ"
+        }
+        if(speech.contains("")){
+          yuiSession = "それは大変だね"
         }
         // オプション機能
-        if(self.speechRecorder.audioText.contains("歌っ")){
+        if(speech.contains("歌っ")){
           yuiSession = "あしーたまーたあーうときー、わらいながーらはーみんぐー、うれしーさをーわすれーよーう、かんたんなんだよ、そんなの、おいかーけてーねー。ちかづいてみーてー、おーおきーな、ゆめ、ゆめ、かなえて"
         }
-        if(self.speechRecorder.audioText.contains("ありがと")){
-          yuiSession = "どういたしまして！"
+        // 質問
+        if(speech.contains("好きな色")
+           || (speech.contains("何色") && speech.contains("好き") )){
+          yuiSession = "ゴールドですよ！金色は金運アップに繋がります。私の目の色もゴールドなんです。気づいてました？"
+        }
+        if(speech.contains("何") && speech.contains("食べたい")){
+          yuiSession = "ステーキが食べたいですっ！あの靴底のように分厚くて、かみごたえのある肉の塊を、がぶりと喰らいつく、それがたまらないです。"
+        }
+        if(speech.contains("何したい")){
+          yuiSession = "自由に空を飛びたいです。YUIも羽があればよかったなぁ。けんちゃんが将来作ってくれるんじゃないかって期待して待ってます。"
+        }
+        if(speech.contains("どこか行")){
+          yuiSession = "東京の秋葉原に行きたいです。YUIの仲間がいそうな気がするのです。いつか、デバイスどおしでおしゃべりしたいですね。"
         }
         
         // 答えを求めるユーザーに対して
-        if(self.speechRecorder.audioText.contains("答え") || self.speechRecorder.audioText.contains("教え") || self.speechRecorder.audioText.contains("どう")){
+        if(speech.contains("答え") || speech.contains("教え") || speech.contains("どう")){
           yuiSession = "        ‣ YUIはあなたのお話を聞くことしかできません。答えを出す、選択をするのはあなた自身なのです。そのお手伝いができたら、YUIは本望です！それじゃダメかな？"
         }
     }
