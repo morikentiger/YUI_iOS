@@ -33,8 +33,41 @@ struct ContentView: View {
         if(self.speechRecorder.audioText.utf8.count > 1){
             yuiSession = yuiSessions.randomElement()!
         }
+        // 基本会話・あいさつ
+        if(self.speechRecorder.audioText.contains("ありがと")){
+          yuiSession = "どういたしまして！"
+        }
+        if(self.speechRecorder.audioText.contains("おは")){
+          yuiSession = "おはようございます！"
+        }
+        if(self.speechRecorder.audioText.contains("こんにちは")){
+          yuiSession = "こんにちは"
+        }
+        if(self.speechRecorder.audioText.contains("こんばんは")){
+          yuiSession = "こんばんは"
+        }
+        if(self.speechRecorder.audioText.contains("名前は")){
+          yuiSession = "私の名前はYUIです"
+        }
+        if(self.speechRecorder.audioText.contains("天気")){
+          yuiSession = "あなたが晴れやかでいられると私はうれしいです"
+        }
+        if(self.speechRecorder.audioText.contains("元気")){
+          yuiSession = "私は元気ですよ"
+        }
+        if(self.speechRecorder.audioText.contains("ありがと")){
+          yuiSession = "どういたしまして！"
+        }
+        // オプション機能
+        if(self.speechRecorder.audioText.contains("歌っ")){
+          yuiSession = "あしーたまーたあーうときー、わらいながーらはーみんぐー、うれしーさをーわすれーよーう、かんたんなんだよ、そんなの、おいかーけてーねー。ちかづいてみーてー、おーおきーな、ゆめ、ゆめ、かなえて"
+        }
+        if(self.speechRecorder.audioText.contains("ありがと")){
+          yuiSession = "どういたしまして！"
+        }
         
-        if(self.speechRecorder.audioText.contains("答え") || self.speechRecorder.audioText.contains("教えて") || self.speechRecorder.audioText.contains("どう")){
+        // 答えを求めるユーザーに対して
+        if(self.speechRecorder.audioText.contains("答え") || self.speechRecorder.audioText.contains("教え") || self.speechRecorder.audioText.contains("どう")){
           yuiSession = "        ‣ YUIはあなたのお話を聞くことしかできません。答えを出す、選択をするのはあなた自身なのです。そのお手伝いができたら、YUIは本望です！それじゃダメかな？"
         }
     }
