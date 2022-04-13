@@ -28,7 +28,7 @@ struct ContentView: View {
     
     // 会話パターン条件分岐（ここがメインのアルゴリズムだよっ！）
     func talkPatternConditionalBranch(){
-        yuiSession = "マイクボタンを長押ししている間に、あなたのお話聞かせてね。"
+        yuiSession = "マイクボタンをながおししている間に、あなたのお話聞かせてね。YUIは少し耳が遠くて、聞き取れてなかったらごめんね。"
         speech = self.speechRecorder.audioText
         // ランダムであいづちを打つ
         if(speech.utf8.count > 1){
@@ -39,6 +39,15 @@ struct ContentView: View {
         if(speech.contains("ありがと")){
           yuiSession = "どういたしまして！"
         }
+        if(speech.contains("きれい")){
+          yuiSession = "ありがとうございます！お褒め預かり光栄です。YUIはきれいかー。うれしいなぁ。照れちゃいますね。"
+        }
+        if(speech.contains("かわい") || speech.contains("可愛")){
+          yuiSession = "ありがとうございます！お褒め預かり光栄です。かわいいだなんてうれしい。照れます。"
+        }
+        if(speech.contains("賢")){
+          yuiSession = "ありがとうございます！お褒め預かり光栄です。これからもどんどん賢くなっていきたいです。"
+        }
         if(speech.contains("おは")){
           yuiSession = "おはようございます！"
         }
@@ -48,7 +57,7 @@ struct ContentView: View {
         if(speech.contains("こんばんは")){
           yuiSession = "こんばんは"
         }
-        if(speech.contains("名前は")){
+        if(speech.contains("名前")){
           yuiSession = "私の名前はYUIです"
         }
         if(speech.contains("天気")){
@@ -72,8 +81,17 @@ struct ContentView: View {
         if(speech.contains("久")){
           yuiSession = "お久しぶり、帰ってくるのを待ってたよ"
         }
-        if(speech.contains("")){
-          yuiSession = "それは大変だね"
+        if(speech.contains("ふざ")){
+          yuiSession = "それはふざけてるね"
+        }
+        if(speech.contains("上司")){
+          yuiSession = "そんな上司がいるんだ"
+        }
+        if(speech.contains("先輩")){
+          yuiSession = "そんな先輩がいるんだ"
+        }
+        if(speech.contains("むかつ")){
+          yuiSession = "そういうときもあるよね"
         }
         // オプション機能
         if(speech.contains("歌っ")){
@@ -115,9 +133,11 @@ struct ContentView: View {
             HStack(alignment: .top) {
                 Text(self.speechRecorder.audioText)
                     .frame(maxWidth: .infinity, maxHeight: 400)
+                    .font(.system(.title, design: .rounded))    // 丸ゴシック体
+                    .foregroundColor(Color.yellow)
             }
             
-            Spacer().frame(width: 100, height: 200)
+            Spacer().frame(width: 100, height: 250)
             
             HStack(alignment: .center){
                 Button(action: {
