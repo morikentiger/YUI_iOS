@@ -135,44 +135,48 @@ struct ContentView: View {
     }
     
     var body: some View {
-        VStack(alignment: .center) {
-            Text("ver1.3")
-                .font(.system(.title, design: .rounded))    // 丸ゴシック体
-                .foregroundColor(Color.red)
+        ZStack{
+            Color.black
+                .ignoresSafeArea()
             
-            HStack(alignment: .top) {
-                Text(self.speechRecorder.audioText)
-                    .frame(maxWidth: .infinity, maxHeight: 400)
+            VStack(alignment: .center) {
+                Text("ver1.3")
                     .font(.system(.title, design: .rounded))    // 丸ゴシック体
-                    .foregroundColor(Color.yellow)
-            }
-            
-            Spacer().frame(width: 100, height: 250)
-            
-            HStack(alignment: .center){
-                Button(action: {
-                    self.speechRecorder.stopRecording()
-                    
-                    talkPatternConditionalBranch()
-                    
-                    let utterance = AVSpeechUtterance(string: yuiSession)
-                    utterance.voice = AVSpeechSynthesisVoice(language: "ja-JP")
-                    utterance.pitchMultiplier = Float(voicePitch)
-                    utterance.postUtteranceDelay = pauseTime
-                    synthesizer.speak(utterance)
-                }, label: {
-                    if !self.speechRecorder.audioRunning {
-                        Image(systemName: "mic")
-                            .font(.system(size: 60))
-//                            .imageScale(.large)
-//                            .background(Color.green)
-//                            .foregroundColor(.white)
-//                            .clipShape(Circle())
-                    } else {
-                        Image(systemName: "mic.fill")
-                            .font(.system(size: 120))
-                    }
-                })
+                    .foregroundColor(Color.red)
+                
+                HStack(alignment: .top) {
+                    Text(self.speechRecorder.audioText)
+                        .frame(maxWidth: .infinity, maxHeight: 400)
+                        .font(.system(.title, design: .rounded))    // 丸ゴシック体
+                        .foregroundColor(Color.yellow)
+                }
+                
+                Spacer().frame(width: 100, height: 250)
+                
+                HStack(alignment: .center){
+                    Button(action: {
+                        self.speechRecorder.stopRecording()
+                        
+                        talkPatternConditionalBranch()
+                        
+                        let utterance = AVSpeechUtterance(string: yuiSession)
+                        utterance.voice = AVSpeechSynthesisVoice(language: "ja-JP")
+                        utterance.pitchMultiplier = Float(voicePitch)
+                        utterance.postUtteranceDelay = pauseTime
+                        synthesizer.speak(utterance)
+                    }, label: {
+                        if !self.speechRecorder.audioRunning {
+                            Image(systemName: "mic")
+                                .font(.system(size: 60))
+                            //                            .imageScale(.large)
+                            //                            .background(Color.green)
+                            //                            .foregroundColor(.white)
+                            //                            .clipShape(Circle())
+                        } else {
+                            Image(systemName: "mic.fill")
+                                .font(.system(size: 120))
+                        }
+                    })
                     .alert(isPresented: $showingAlert) {
                         Alert(title: Text("マイクの使用または音声の認識が許可されていません"))
                     }
@@ -180,16 +184,16 @@ struct ContentView: View {
                     .simultaneousGesture(
                         LongPressGesture().onEnded{ _ in
                             if(AVCaptureDevice.authorizationStatus(for: AVMediaType.audio) == .authorized &&
-                                SFSpeechRecognizer.authorizationStatus() == .authorized){
+                               SFSpeechRecognizer.authorizationStatus() == .authorized){
                                 self.showingAlert = false
                                 do {
                                     try self.speechRecorder.startRecording()
                                     
-    //                                self.speechRecorder.toggleRecording()
-    //                                if !self.speechRecorder.audioRunning {
-    //                                    DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
-    //                                    }
-    //                                }
+                                    //                                self.speechRecorder.toggleRecording()
+                                    //                                if !self.speechRecorder.audioRunning {
+                                    //                                    DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
+                                    //                                    }
+                                    //                                }
                                 } catch {
                                     
                                 }
@@ -203,27 +207,28 @@ struct ContentView: View {
                         
                     )
                     
-                
-            }
-            Spacer().frame(width: 100, height: 60)
-        }
-        .background{
-            Image("YUI08")
-        }
-        .onAppear{
-            AVCaptureDevice.requestAccess(for: AVMediaType.audio) { granted in
-                OperationQueue.main.addOperation {
                     
                 }
+                Spacer().frame(width: 100, height: 60)
             }
-            SFSpeechRecognizer.requestAuthorization { status in
-                OperationQueue.main.addOperation {
-                    //switch status {
-                    //    case .authorized:
-                    //
-                    //    default:
-                    //
-                    //}
+            .background{
+                Image("YUI08")
+            }
+            .onAppear{
+                AVCaptureDevice.requestAccess(for: AVMediaType.audio) { granted in
+                    OperationQueue.main.addOperation {
+                        
+                    }
+                }
+                SFSpeechRecognizer.requestAuthorization { status in
+                    OperationQueue.main.addOperation {
+                        //switch status {
+                        //    case .authorized:
+                        //
+                        //    default:
+                        //
+                        //}
+                    }
                 }
             }
         }
