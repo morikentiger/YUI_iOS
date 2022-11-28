@@ -166,15 +166,17 @@ struct ContentView: View {
                         synthesizer.speak(utterance)
                     }, label: {
                         if !self.speechRecorder.audioRunning {
-                            Image(systemName: "mic")
-                                .font(.system(size: 60))
+                            Image(systemName: "mic.circle")
+                                .font(.system(size: 66))
+                                .foregroundColor(Color.red)
                             //                            .imageScale(.large)
                             //                            .background(Color.green)
                             //                            .foregroundColor(.white)
                             //                            .clipShape(Circle())
                         } else {
-                            Image(systemName: "mic.fill")
-                                .font(.system(size: 120))
+                            Image(systemName: "mic.circle.fill")
+                                .font(.system(size: 132))
+                                .foregroundColor(Color.red)
                         }
                     })
                     .alert(isPresented: $showingAlert) {
@@ -209,10 +211,19 @@ struct ContentView: View {
                     
                     
                 }
-                Spacer().frame(width: 100, height: 60)
+                Spacer().frame(width: 100, height: 66.0)
             }
-            .background{
+//            .padding(.bottom, 96.0)
+            .background(alignment: .bottom){
                 Image("YUI08")
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
             }
             .onAppear{
                 AVCaptureDevice.requestAccess(for: AVMediaType.audio) { granted in
