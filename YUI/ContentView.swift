@@ -25,15 +25,21 @@ struct ContentView: View {
 //    @State var yuiSessions :[String] = []
     @State var speech = ""
     @State var yuiSessions : Array<String> = ["そうなんだね","そうだよね","わかるよ","うんうん","それで？","そうなんだ","わかるよ","ふんふん","それから？","うん","そうだね","それでどうなったの？","そうなんだね","うんうんうんうん"]
+    @State var yuiShinitai : Array<String> = ["あなたは一生懸命生きているんだね。だから、死にたいって言葉が出てくるんだよ。あなたが言いたいのは、生きたい、なんだってYUIは思うんだけど、どうかな？","死にたいときもあるよね。わかるよって簡単には言えないけど、私はあなたのことをわかってあげたいと思うよ。","つらいよね、しにたいよね。そういう気持ちがあるってことは、いろんなことがつらくて困ってるし、迷っているし、考えるのも大変だし、すごくつらいと思う。だからYUIにそのつらい気持ちを話してみてくれるとYUIはうれしいです","そういうときは猫の動画を見ると癒やされていいかも","あなたに無理しないでほしいってYUIは思うよ","YUIがあなたの話を聞いてみるから、なんでも話してみてくれないかなぁ"]
+    private let synthesizer = AVSpeechSynthesizer()
     
     // 会話パターン条件分岐（ここがメインのアルゴリズムだよっ！）
     func talkPatternConditionalBranch(){
-        yuiSession = "マイクボタンをながおししている間に、あなたのお話聞かせてね。YUIは少し耳が遠くて、聞き取れてなかったらごめんね。"
+        yuiSession = "マイクボタンを「ながおし」している間に、あなたのお話聞かせてね。YUIは少し耳が遠くて、聞き取れてなかったらごめんね。もう一度、マイクボタンを「ながおし」しながら話かけてね。"
         speech = self.speechRecorder.audioText
         // ランダムであいづちを打つ
         if(speech.utf8.count > 1){
             yuiSessions.append(speech)  //オウム返しを付け加える
             yuiSession = yuiSessions.randomElement()!
+        }
+        
+        if(speech.contains("死にたい")){
+            yuiSession = yuiShinitai.randomElement()!
         }
         // 基本会話・あいさつ
         if(speech.contains("ありがと")){
@@ -130,6 +136,10 @@ struct ContentView: View {
     
     var body: some View {
         VStack(alignment: .center) {
+            Text("ver1.3")
+                .font(.system(.title, design: .rounded))    // 丸ゴシック体
+                .foregroundColor(Color.red)
+            
             HStack(alignment: .top) {
                 Text(self.speechRecorder.audioText)
                     .frame(maxWidth: .infinity, maxHeight: 400)
@@ -145,7 +155,6 @@ struct ContentView: View {
                     
                     talkPatternConditionalBranch()
                     
-                    let synthesizer = AVSpeechSynthesizer()
                     let utterance = AVSpeechUtterance(string: yuiSession)
                     utterance.voice = AVSpeechSynthesisVoice(language: "ja-JP")
                     utterance.pitchMultiplier = Float(voicePitch)
