@@ -12,6 +12,7 @@
 		719CCD4227B4D78000CD63BC /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 719CCD4127B4D78000CD63BC /* ContentView.swift */; };
 		719CCD4427B4D78400CD63BC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 719CCD4327B4D78400CD63BC /* Assets.xcassets */; };
 		719CCD4727B4D78400CD63BC /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 719CCD4627B4D78400CD63BC /* Preview Assets.xcassets */; };
+		71DC70DE29353FD0000BBE1C /* TalkPatternConditionBranch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71DC70DD29353FD0000BBE1C /* TalkPatternConditionBranch.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -21,6 +22,7 @@
 		719CCD4127B4D78000CD63BC /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		719CCD4327B4D78400CD63BC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		719CCD4627B4D78400CD63BC /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		71DC70DD29353FD0000BBE1C /* TalkPatternConditionBranch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TalkPatternConditionBranch.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,6 +58,7 @@
 				719CCD3F27B4D78000CD63BC /* YUIApp.swift */,
 				719CCD4127B4D78000CD63BC /* ContentView.swift */,
 				712E883227B4DFFC00FB3814 /* SpeechRecorder.swift */,
+				71DC70DD29353FD0000BBE1C /* TalkPatternConditionBranch.swift */,
 				719CCD4327B4D78400CD63BC /* Assets.xcassets */,
 				719CCD4527B4D78400CD63BC /* Preview Content */,
 			);
@@ -140,6 +143,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				71DC70DE29353FD0000BBE1C /* TalkPatternConditionBranch.swift in Sources */,
 				719CCD4227B4D78000CD63BC /* ContentView.swift in Sources */,
 				712E883327B4DFFC00FB3814 /* SpeechRecorder.swift in Sources */,
 				719CCD4027B4D78000CD63BC /* YUIApp.swift in Sources */,

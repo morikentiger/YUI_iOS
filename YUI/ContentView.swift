@@ -21,12 +21,12 @@ struct ContentView: View {
     
     let voicePitch = 1.2
     let pauseTime = 1.0
+    private let synthesizer = AVSpeechSynthesizer()
     @State var yuiSession = "あなたのお話、聞かせてください。"
 //    @State var yuiSessions :[String] = []
     @State var speech = ""
     @State var yuiSessions : Array<String> = ["そうなんだね","そうだよね","わかるよ","うんうん","それで？","そうなんだ","わかるよ","ふんふん","それから？","うん","そうだね","それでどうなったの？","そうなんだね","うんうんうんうん"]
     @State var yuiShinitai : Array<String> = ["あなたは一生懸命生きているんだね。だから、死にたいって言葉が出てくるんだよ。あなたが言いたいのは、生きたい、なんだってYUIは思うんだけど、どうかな？","死にたいときもあるよね。わかるよって簡単には言えないけど、私はあなたのことをわかってあげたいと思うよ。","つらいよね、しにたいよね。そういう気持ちがあるってことは、いろんなことがつらくて困ってるし、迷っているし、考えるのも大変だし、すごくつらいと思う。だからYUIにそのつらい気持ちを話してみてくれるとYUIはうれしいです","そういうときは猫の動画を見ると癒やされていいかも","あなたに無理しないでほしいってYUIは思うよ","YUIがあなたの話を聞いてみるから、なんでも話してみてくれないかなぁ"]
-    private let synthesizer = AVSpeechSynthesizer()
     
     // 会話パターン条件分岐（ここがメインのアルゴリズムだよっ！）
     func talkPatternConditionalBranch(){
@@ -140,7 +140,7 @@ struct ContentView: View {
                 .ignoresSafeArea()
             
             VStack(alignment: .center) {
-                Text("ver1.3")
+                Text("ver1.4")
                     .font(.system(.title, design: .rounded))    // 丸ゴシック体
                     .foregroundColor(Color.red)
                 
