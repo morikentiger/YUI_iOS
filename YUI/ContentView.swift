@@ -140,7 +140,7 @@ struct ContentView: View {
                 .ignoresSafeArea()
             
             VStack(alignment: .center) {
-                Text("ver1.4")
+                Text("ver1.5")
                     .font(.system(.title, design: .rounded))    // 丸ゴシック体
                     .foregroundColor(Color.red)
                 
@@ -191,12 +191,12 @@ struct ContentView: View {
                                 self.showingAlert = false
                                 do {
                                     try self.speechRecorder.startRecording()
-                                    
-                                    //                                self.speechRecorder.toggleRecording()
-                                    //                                if !self.speechRecorder.audioRunning {
-                                    //                                    DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
-                                    //                                    }
-                                    //                                }
+    
+//                                    self.speechRecorder.toggleRecording()
+//                                    if !self.speechRecorder.audioRunning {
+//                                        DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
+//                                        }
+//                                    }
                                 } catch {
                                     
                                 }
@@ -242,6 +242,16 @@ struct ContentView: View {
                         //}
                     }
                 }
+                
+                self.speechRecorder.stopRecording()
+                
+                let utterance = AVSpeechUtterance(string: "起動してくれてありがとう。YUIです。よろしくおねがいします！")
+                utterance.voice = AVSpeechSynthesisVoice(language: "ja-JP")
+                utterance.pitchMultiplier = Float(voicePitch)
+                utterance.postUtteranceDelay = pauseTime
+                // 読み上げ
+                synthesizer.speak(utterance)
+                
             }
         }
     }
