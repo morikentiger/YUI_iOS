@@ -163,6 +163,7 @@ struct ContentView: View {
                         utterance.voice = AVSpeechSynthesisVoice(language: "ja-JP")
                         utterance.pitchMultiplier = Float(voicePitch)
                         utterance.postUtteranceDelay = pauseTime
+                        // 読み上げ
                         synthesizer.speak(utterance)
                     }, label: {
                         if !self.speechRecorder.audioRunning {
