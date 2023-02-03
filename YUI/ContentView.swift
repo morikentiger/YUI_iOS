@@ -134,6 +134,24 @@ struct ContentView: View {
 //        }
     }
     
+//    func startSpeechRecognitioin() {
+//
+//
+//        speechRecognizer.delegate = self
+//
+//
+//    }
+//
+//    // 音声認識を開始した時に呼び出されるメソッド
+//    func speechRecognizweDidStartRecording(_ speechRecognizer: SFSpeechRecognizer) {
+//        // 音声認識を監視したときの処理をここに書く
+//    }
+//
+//    // 音声認識を完了したときに呼び出されるメソッド
+//    func speechRecognizerDidFinishRecording(_ speechRecognizer: SFSpeechRecognizer) {
+//        // 音声認識を完了したときの処理をここに書く
+//    }
+//
     var body: some View {
         ZStack{
             Color.black
@@ -243,14 +261,55 @@ struct ContentView: View {
                     }
                 }
                 
-                self.speechRecorder.stopRecording()
+//                self.speechRecorder.stopRecording()
+//
+//                let utterance = AVSpeechUtterance(string: "起動してくれてありがとう。YUIです。よろしくおねがいします！")
+//                utterance.voice = AVSpeechSynthesisVoice(language: "ja-JP")
+//                utterance.pitchMultiplier = Float(voicePitch)
+//                utterance.postUtteranceDelay = pauseTime
+//                // 読み上げ
+//                synthesizer.speak(utterance)
                 
-                let utterance = AVSpeechUtterance(string: "起動してくれてありがとう。YUIです。よろしくおねがいします！")
-                utterance.voice = AVSpeechSynthesisVoice(language: "ja-JP")
-                utterance.pitchMultiplier = Float(voicePitch)
-                utterance.postUtteranceDelay = pauseTime
-                // 読み上げ
-                synthesizer.speak(utterance)
+//                if(AVCaptureDevice.authorizationStatus(for: AVMediaType.audio) == .authorized &&
+//                   SFSpeechRecognizer.authorizationStatus() == .authorized){
+//                    self.showingAlert = false
+//                    do {
+//                        try self.speechRecorder.startRecording()
+//
+////                                    self.speechRecorder.toggleRecording()
+////                                    if !self.speechRecorder.audioRunning {
+////                                        DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
+////                                        }
+////                                    }
+//                    } catch {
+//
+//                    }
+//
+//                }
+//                else{
+//                    self.showingAlert = true
+//                }
+                
+                
+                
+//                while true {
+//                    do {
+//                        try self.speechRecorder.startRecording()
+//                    } catch {
+//
+//                    }
+//
+//                    self.speechRecorder.stopRecording()
+//
+//                    talkPatternConditionalBranch()
+//
+//                    let utterance = AVSpeechUtterance(string: yuiSession)
+//                    utterance.voice = AVSpeechSynthesisVoice(language: "ja-JP")
+//                    utterance.pitchMultiplier = Float(voicePitch)
+//                    utterance.postUtteranceDelay = pauseTime
+//                    // 読み上げ
+//                    synthesizer.speak(utterance)
+//                }
                 
             }
         }
