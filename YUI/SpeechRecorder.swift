@@ -149,6 +149,14 @@ final class SpeechRecorder: ObservableObject {
              */
         }
         
+//        // Check for silence after a few seconds
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
+//            if self.audioEngine.isRunning {
+//                self.audioEngine.stop()
+//                self.recognitionRequest?.endAudio()
+//            }
+//        }
+        
         
         
         self.audioEngine.prepare()

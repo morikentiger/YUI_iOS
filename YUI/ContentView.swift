@@ -152,13 +152,66 @@ struct ContentView: View {
 //        // 音声認識を完了したときの処理をここに書く
 //    }
 //
+    func speak()
+    {
+        self.speechRecorder.stopRecording()
+        
+        talkPatternConditionalBranch()
+        
+        let utterance = AVSpeechUtterance(string: yuiSession)
+        utterance.voice = AVSpeechSynthesisVoice(language: "ja-JP")
+        utterance.pitchMultiplier = Float(voicePitch)
+        utterance.postUtteranceDelay = pauseTime
+        // 読み上げ
+        synthesizer.speak(utterance)
+        
+//        recognize()
+        
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 12) {
+//            recognize()
+//        }
+    }
+    
+    func recognize()
+    {
+        if(AVCaptureDevice.authorizationStatus(for: AVMediaType.audio) == .authorized &&
+           SFSpeechRecognizer.authorizationStatus() == .authorized){
+            self.showingAlert = false
+            do {
+                try self.speechRecorder.startRecording()
+//
+//                                    self.speechRecorder.toggleRecording()
+//                                    if !self.speechRecorder.audioRunning {
+//                                        DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
+//                                        }
+//                                    }
+            } catch {
+                
+            }
+            
+        }
+        else{
+            self.showingAlert = true
+        }
+        
+//        speak()
+        
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
+//            speak()
+//        }
+        
+//        while(speechRecorder.audioRunning){
+//        }
+//        speak()
+    }
+    
     var body: some View {
         ZStack{
             Color.black
                 .ignoresSafeArea()
             
             VStack(alignment: .center) {
-                Text("ver1.5")
+                Text("ver2.0")
                     .font(.system(.title, design: .rounded))    // 丸ゴシック体
                     .foregroundColor(Color.red)
                 
@@ -173,16 +226,7 @@ struct ContentView: View {
                 
                 HStack(alignment: .center){
                     Button(action: {
-                        self.speechRecorder.stopRecording()
-                        
-                        talkPatternConditionalBranch()
-                        
-                        let utterance = AVSpeechUtterance(string: yuiSession)
-                        utterance.voice = AVSpeechSynthesisVoice(language: "ja-JP")
-                        utterance.pitchMultiplier = Float(voicePitch)
-                        utterance.postUtteranceDelay = pauseTime
-                        // 読み上げ
-                        synthesizer.speak(utterance)
+                        speak()
                     }, label: {
                         if !self.speechRecorder.audioRunning {
                             Image(systemName: "mic.circle")
@@ -204,45 +248,15 @@ struct ContentView: View {
                     .frame(width: 100, height: 100, alignment: .center)
                     .simultaneousGesture(
                         LongPressGesture().onEnded{ _ in
-                            if(AVCaptureDevice.authorizationStatus(for: AVMediaType.audio) == .authorized &&
-                               SFSpeechRecognizer.authorizationStatus() == .authorized){
-                                self.showingAlert = false
-                                do {
-                                    try self.speechRecorder.startRecording()
-    
-//                                    self.speechRecorder.toggleRecording()
-//                                    if !self.speechRecorder.audioRunning {
-//                                        DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
-//                                        }
-//                                    }
-                                } catch {
-                                    
-                                }
-                                
-                            }
-                            else{
-                                self.showingAlert = true
-                            }
-                            
+                            recognize()
                         }
-                        
                     )
-                    
-                    
                 }
                 Spacer().frame(width: 100, height: 66.0)
             }
-//            .padding(.bottom, 96.0)
+            //            .padding(.bottom, 96.0)
             .background(alignment: .bottom){
                 Image("YUI08")
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
             }
             .onAppear{
                 AVCaptureDevice.requestAccess(for: AVMediaType.audio) { granted in
@@ -261,56 +275,14 @@ struct ContentView: View {
                     }
                 }
                 
-//                self.speechRecorder.stopRecording()
-//
-//                let utterance = AVSpeechUtterance(string: "起動してくれてありがとう。YUIです。よろしくおねがいします！")
-//                utterance.voice = AVSpeechSynthesisVoice(language: "ja-JP")
-//                utterance.pitchMultiplier = Float(voicePitch)
-//                utterance.postUtteranceDelay = pauseTime
-//                // 読み上げ
-//                synthesizer.speak(utterance)
-                
-//                if(AVCaptureDevice.authorizationStatus(for: AVMediaType.audio) == .authorized &&
-//                   SFSpeechRecognizer.authorizationStatus() == .authorized){
-//                    self.showingAlert = false
-//                    do {
-//                        try self.speechRecorder.startRecording()
-//
-////                                    self.speechRecorder.toggleRecording()
-////                                    if !self.speechRecorder.audioRunning {
-////                                        DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
-////                                        }
-////                                    }
-//                    } catch {
-//
+//                while(true){
+//                    DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
+//                        recognize()
 //                    }
-//
-//                }
-//                else{
-//                    self.showingAlert = true
+//                    speak()
 //                }
                 
-                
-                
-//                while true {
-//                    do {
-//                        try self.speechRecorder.startRecording()
-//                    } catch {
-//
-//                    }
-//
-//                    self.speechRecorder.stopRecording()
-//
-//                    talkPatternConditionalBranch()
-//
-//                    let utterance = AVSpeechUtterance(string: yuiSession)
-//                    utterance.voice = AVSpeechSynthesisVoice(language: "ja-JP")
-//                    utterance.pitchMultiplier = Float(voicePitch)
-//                    utterance.postUtteranceDelay = pauseTime
-//                    // 読み上げ
-//                    synthesizer.speak(utterance)
-//                }
-                
+//                speak()
             }
         }
     }
